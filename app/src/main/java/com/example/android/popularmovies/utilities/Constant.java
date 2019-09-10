@@ -152,4 +152,5 @@ public final class Constant {
 
     /** Constant for formatting runtime */
     public static final int ZERO = 0;
+    public static  String SEARCH_KEYWORD = "";
 }

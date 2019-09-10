@@ -15,35 +15,60 @@
   -->
 
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".ui.main.MainActivity">
 
-    <FrameLayout
-        android:id="@+id/frame_main"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!-- SwipeRefreshLayout that is used whenever the user can refresh the contents of a view -->
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        <com.mancj.materialsearchbar.MaterialSearchBar
+            android:id="@+id/searchBar"
+            style="@style/MaterialSearchBarLight"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:mt_hint="Custom hint"
+            app:mt_menuIconDrawable="@drawable/ic_menu_grey"
+            app:mt_navIconEnabled="true"
+            app:mt_searchIconDrawable="@drawable/ic_search_grey" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_movie"
+        <FrameLayout
+            android:id="@+id/frame_main"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/searchBar">
+
+
+            <!-- SwipeRefreshLayout that is used whenever the user can refresh the contents of a view -->
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/blue_grey_dark" />
+                android:layout_height="match_parent">
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_movie"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/blue_grey_dark" />
 
-        <!-- Only visible when there are no favorite movies -->
-        <TextView
-            android:id="@+id/tv_empty"
-            style="@style/EmptyTextStyle"
-            android:textAlignment="center"
-            android:drawablePadding="@dimen/padding_activity"
-            android:textColor="@color/color_offline" />
+            </android.support.v4.widget.SwipeRefreshLayout>
 
-    </FrameLayout>
+            <!-- Only visible when there are no favorite movies -->
+            <TextView
+                android:id="@+id/tv_empty"
+                style="@style/EmptyTextStyle"
+                android:drawablePadding="@dimen/padding_activity"
+                android:textAlignment="center"
+                android:textColor="@color/color_offline" />
+
+        </FrameLayout>
+
+    </android.support.constraint.ConstraintLayout>
 </layout>

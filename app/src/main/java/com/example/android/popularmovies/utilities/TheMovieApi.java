@@ -22,7 +22,9 @@ import com.example.android.popularmovies.model.ReviewResponse;
 import com.example.android.popularmovies.model.VideoResponse;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -37,6 +39,7 @@ public interface TheMovieApi {
             @Query("api_key") String apiKey,
             @Query("language") String language,
             @Query("page") int page
+
     );
 
     @GET("movie/{id}")
@@ -60,6 +63,15 @@ public interface TheMovieApi {
             @Path("id") int id,
             @Query("api_key") String apiKey,
             @Query("language") String language
+    );
+
+    @GET("search/movie")
+    Call<MovieResponse> searchMovie(
+            @Query("api_key") String apiKey,
+            @Query("language") String language,
+            @Query("page") int page,
+            @Query("query") String query
+
     );
 
 }

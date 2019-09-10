@@ -25,6 +25,9 @@ import com.example.android.popularmovies.model.MovieResponse;
 import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.utilities.Controller;
 import com.example.android.popularmovies.utilities.TheMovieApi;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -65,26 +68,48 @@ public class MovieDataSource extends PageKeyedDataSource<Integer, Movie> {
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params,
                             @NonNull final LoadInitialCallback<Integer, Movie> callback) {
-        mTheMovieApi.getMovies(mSortCriteria, Constant.API_KEY, Constant.LANGUAGE, Constant.PAGE_ONE)
-                .enqueue(new Callback<MovieResponse>() {
-                    @Override
-                    public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                        if (response.isSuccessful()) {
-                            callback.onResult(response.body().getMovieResults(),
-                                    PREVIOUS_PAGE_KEY_ONE, NEXT_PAGE_KEY_TWO);
+        if(!mSortCriteria.equals("search")) {
+            mTheMovieApi.getMovies(mSortCriteria, Constant.API_KEY, Constant.LANGUAGE, Constant.PAGE_ONE)
+                    .enqueue(new Callback<MovieResponse>() {
+                        @Override
+                        public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                            if (response.isSuccessful()) {
+                                callback.onResult(response.body().getMovieResults(),
+                                        PREVIOUS_PAGE_KEY_ONE, NEXT_PAGE_KEY_TWO);
 
-                        } else if (response.code() == RESPONSE_CODE_API_STATUS) {
-                            Log.e(TAG, "Invalid Api key. Response code: " + response.code());
-                        } else {
-                            Log.e(TAG, "Response Code: " + response.code());
+                            } else if (response.code() == RESPONSE_CODE_API_STATUS) {
+                                Log.e(TAG, "Invalid Api key. Response code: " + response.code());
+                            } else {
+                                Log.e(TAG, "Response Code: " + response.code());
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<MovieResponse> call, Throwable t) {
-                        Log.e(TAG, "Failed initializing a PageList: " + t.getMessage());
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<MovieResponse> call, Throwable t) {
+                            Log.e(TAG, "Failed initializing a PageList: " + t.getMessage());
+                        }
+                    });
+        }
+        else
+        {
+            mTheMovieApi.searchMovie(Constant.API_KEY,Constant.LANGUAGE,1,Constant.SEARCH_KEYWORD).enqueue(new Callback<MovieResponse>() {
+                @Override
+                public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+
+                   List<Movie> res = response.body().getMovieResults();
+                   for (int i=0; i<res.size(); i++){
+                        if(res.get(i).getPosterPath() == null||res.get(i).getBackdropPath() == null)
+                            res.remove(i);
+                   }
+                    callback.onResult(res,PREVIOUS_PAGE_KEY_ONE, NEXT_PAGE_KEY_TWO);
+                }
+
+                @Override
+                public void onFailure(Call<MovieResponse> call, Throwable t) {
+
+                }
+            });
+        }
     }
 
     /**

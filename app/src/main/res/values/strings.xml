@@ -140,5 +140,7 @@
 
     <!-- Value in SharedPreferences for favorites option -->
     <string name="pref_sort_by_favorites" translatable="false">favorites</string>
+    <!-- Value in SharedPreferences for search option -->
+    <string name="pref_sort_by_search" translatable="false">search</string>
 
 </resources>

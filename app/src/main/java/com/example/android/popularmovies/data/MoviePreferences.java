@@ -38,7 +38,7 @@ public class MoviePreferences {
         // String for the key
         String keyForSortBy = context.getString(R.string.pref_sort_by_key);
         // String for the default value
-        String defaultSortBy = context.getString(R.string.pref_sort_by_default);
+        String defaultSortBy = context.getString(R.string.pref_sort_by_popular);
         return prefs.getString(keyForSortBy, defaultSortBy);
     }
 

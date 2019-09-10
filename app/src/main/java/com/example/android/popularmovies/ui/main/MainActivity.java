@@ -50,7 +50,9 @@ import com.example.android.popularmovies.data.MovieEntry;
 import com.example.android.popularmovies.data.MoviePreferences;
 import com.example.android.popularmovies.databinding.ActivityMainBinding;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.utilities.InjectorUtils;
+import com.mancj.materialsearchbar.MaterialSearchBar;
 
 import java.util.List;
 
@@ -70,26 +72,43 @@ public class MainActivity extends AppCompatActivity implements
         SharedPreferences.OnSharedPreferenceChangeListener,
         MoviePagedListAdapter.MoviePagedListAdapterOnClickHandler {
 
-    /** Tag for a log message */
+    /**
+     * Tag for a log message
+     */
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    /** MoviePagedListAdapter enables for data to be loaded in chunks */
+    /**
+     * MoviePagedListAdapter enables for data to be loaded in chunks
+     */
     private MoviePagedListAdapter mMoviePagedListAdapter;
 
-    /** Exposes a list of favorite movies from a list of MovieEntry to a RecyclerView */
+    /**
+     * Exposes a list of favorite movies from a list of MovieEntry to a RecyclerView
+     */
     private FavoriteAdapter mFavoriteAdapter;
 
-    /** String for the sort criteria("most popular and highest rated") */
+    /**
+     * String for the sort criteria("most popular and highest rated")
+     */
     private String mSortCriteria;
 
-    /** Member variable for restoring list items positions on device rotation */
+    /**
+     * Member variable for restoring list items positions on device rotation
+     */
     private Parcelable mSavedLayoutState;
 
-    /** ViewModel for MainActivity */
+    /**
+     * ViewModel for MainActivity
+     */
     private MainActivityViewModel mMainViewModel;
 
-    /** This field is used for data binding */
+    /**
+     * This field is used for data binding
+     */
     private ActivityMainBinding mMainBinding;
+
+
+    private MaterialSearchBar searchBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,9 +123,27 @@ public class MainActivity extends AppCompatActivity implements
             // Show a dialog when there is no internet connection
             showNetworkDialog(isOnline());
         }
+              searchBar = findViewById(R.id.searchBar);
+        searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
+            @Override
+            public void onSearchStateChanged(boolean enabled) {
 
-        // Get the sort criteria currently set in Preferences
-        mSortCriteria = MoviePreferences.getPreferredSortCriteria(this);
+            }
+
+            @Override
+            public void onSearchConfirmed(CharSequence text) {
+                Constant.SEARCH_KEYWORD = text.toString();
+                mMainViewModel.initSearch();
+                updateUI("search");
+            }
+
+            @Override
+            public void onButtonClicked(int buttonCode) {
+
+            }
+        });
+                // Get the sort criteria currently set in Preferences
+                mSortCriteria = MoviePreferences.getPreferredSortCriteria(this);
 
         // Get the ViewModel from the factory
         setupViewModel(mSortCriteria);
@@ -192,7 +229,6 @@ public class MainActivity extends AppCompatActivity implements
                 showMovieDataView();
                 if (pagedList != null) {
                     mMoviePagedListAdapter.submitList(pagedList);
-
                     // Restore the scroll position after setting up the adapter with the list of movies
                     mMainBinding.rvMovie.getLayoutManager().onRestoreInstanceState(mSavedLayoutState);
                 }
@@ -222,7 +258,7 @@ public class MainActivity extends AppCompatActivity implements
                 if (movieEntries == null || movieEntries.size() == 0) {
                     // When there are no favorite movies, display an empty view
                     showEmptyView();
-                } else if(!isOnline()) {
+                } else if (!isOnline()) {
                     // When offline, make the movie data view visible
                     showMovieDataView();
                 }
@@ -243,7 +279,7 @@ public class MainActivity extends AppCompatActivity implements
         // When SharedPreference changes, observe the data and update the UI
         // Set a new value for the PagedList of movies to clear old list and reload. Needs to call it
         // when the SharedPreferences is changed because at that time it's okay to overwrite everything.
-        mMainViewModel.setMoviePagedList(mSortCriteria);
+        //mMainViewModel.setMoviePagedList("search");
         updateUI(mSortCriteria);
     }
 
@@ -305,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     /**
-     *  Set the SwipeRefreshLayout triggered by a swipe gesture.
+     * Set the SwipeRefreshLayout triggered by a swipe gesture.
      */
     private void setSwipeRefreshLayout() {
         // Set the colors used in the progress animation
@@ -459,7 +495,7 @@ public class MainActivity extends AppCompatActivity implements
 
     /**
      * Method for persisting data across Activity recreation
-     *
+     * <p>
      * Reference: @see "https://stackoverflow.com/questions/27816217/how-to-save-recyclerviews-scroll
      * -position-using-recyclerview-state"
      */
