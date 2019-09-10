@@ -16,27 +16,21 @@
 
 package com.example.android.popularmovies.ui.main;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
-import android.arch.paging.LivePagedListBuilder;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.paging.LivePagedListBuilder;
+import androidx.paging.PagedList;
 
 import com.example.android.popularmovies.data.MovieDataSourceFactory;
 import com.example.android.popularmovies.data.MovieEntry;
 import com.example.android.popularmovies.data.MovieRepository;
 import com.example.android.popularmovies.model.Movie;
-import com.example.android.popularmovies.model.MovieResponse;
-import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.utilities.Controller;
 import com.example.android.popularmovies.utilities.TheMovieApi;
 
 import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 import static com.example.android.popularmovies.utilities.Constant.INITIAL_LOAD_SIZE_HINT;
 import static com.example.android.popularmovies.utilities.Constant.NUMBER_OF_FIXED_THREADS_FIVE;

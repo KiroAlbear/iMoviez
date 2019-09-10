@@ -16,27 +16,27 @@
 
 package com.example.android.popularmovies.ui.main;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
-import android.arch.paging.PagedList;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.paging.PagedList;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.preference.PreferenceManager;
-import android.support.v7.widget.GridLayoutManager;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements
         // Set the LayoutManager to the RecyclerView and create MoviePagedListAdapter and FavoriteAdapter
         initAdapter();
 
-        // Check if savedInstance is null not to recreate a dialog when rotating
+        // Check if savedInstance is null not to recreate a dialog whe  n rotating
         if (savedInstanceState == null) {
             // Show a dialog when there is no internet connection
             showNetworkDialog(isOnline());
@@ -456,7 +456,7 @@ public class MainActivity extends AppCompatActivity implements
         View sbView = snackbar.getView();
         sbView.setBackgroundColor(Color.WHITE);
         // Set background color of the snackbar
-        TextView textView = sbView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView textView = sbView.findViewById(R.id.snackbar_text);
         textView.setTextColor(Color.BLACK);
         snackbar.show();
     }

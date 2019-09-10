@@ -1,4 +1,4 @@
-/*
+package com.example.android.popularmovies.data;/*
  *  Copyright 2018 Soojeong Shin
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,14 +14,16 @@
  *  limitations under the License.
  */
 
-package com.example.android.popularmovies.data;
 
-import android.arch.persistence.room.Database;
-import android.arch.persistence.room.Room;
-import android.arch.persistence.room.RoomDatabase;
-import android.arch.persistence.room.TypeConverters;
+
+import androidx.room.Database;
+import androidx.room.Room;
+import androidx.room.RoomDatabase;
+import androidx.room.TypeConverters;
 import android.content.Context;
 import android.util.Log;
+
+
 
 import static com.example.android.popularmovies.utilities.Constant.DATABASE_NAME;
 

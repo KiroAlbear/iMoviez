@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "187399552463",
+    "firebase_url": "https://imoviez-99f0b.firebaseio.com",
+    "project_id": "imoviez-99f0b",
+    "storage_bucket": "imoviez-99f0b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:187399552463:android:739c0d4a49176598b5e6ba",
+        "android_client_info": {
+          "package_name": "com.example.moviez"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "187399552463-48orv0e05pcbgg0rvk6gnu88kfg3pj1g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.moviez",
+            "certificate_hash": "7b28d77282ce7cce6e95d8898fbf7f57e1444fad"
+          }
+        },
+        {
+          "client_id": "187399552463-8nls73abbgmk8foeuru66rpl22keqgur.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDDWDRSU5skf95Y34r9K6QAXmhDxajORzc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "187399552463-8nls73abbgmk8foeuru66rpl22keqgur.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

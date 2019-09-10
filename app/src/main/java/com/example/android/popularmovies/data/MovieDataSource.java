@@ -16,8 +16,8 @@
 
 package com.example.android.popularmovies.data;
 
-import android.arch.paging.PageKeyedDataSource;
-import android.support.annotation.NonNull;
+import androidx.paging.PageKeyedDataSource;
+import androidx.annotation.NonNull;
 import android.util.Log;
 
 import com.example.android.popularmovies.model.Movie;
@@ -25,7 +25,6 @@ import com.example.android.popularmovies.model.MovieResponse;
 import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.utilities.Controller;
 import com.example.android.popularmovies.utilities.TheMovieApi;
-import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 

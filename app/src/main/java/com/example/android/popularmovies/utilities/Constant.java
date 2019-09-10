@@ -153,4 +153,8 @@ public final class Constant {
     /** Constant for formatting runtime */
     public static final int ZERO = 0;
     public static  String SEARCH_KEYWORD = "";
+    public static final String MOVIE_LINK_KEY_FIREBASE = "link";
+    public static final String MOVIE_SUB_KEY_FIREBASE = "sub";
+    public static final String MOVIE_COLLECTION_KEY = "movies";
+
 }

@@ -16,18 +16,20 @@
 
 package com.example.android.popularmovies.ui.main;
 
-import android.arch.paging.PagedListAdapter;
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
+import androidx.paging.PagedListAdapter;
+import androidx.databinding.DataBindingUtil;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.databinding.MovieListItemBinding;
+import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.viewModels.FireBaseViewModel;
 import com.squareup.picasso.Picasso;
 
 import static com.example.android.popularmovies.utilities.Constant.IMAGE_BASE_URL;
@@ -160,6 +162,9 @@ public class MoviePagedListAdapter extends PagedListAdapter<Movie, MoviePagedLis
             int adapterPosition = getAdapterPosition();
             Movie movie = getItem(adapterPosition);
             mOnClickHandler.onItemClick(movie);
+
+            FireBaseViewModel vm = new FireBaseViewModel();
+            vm.addMovie(movie.getTitle(),new FirebaseMovieModel("",""));
         }
     }
 }
