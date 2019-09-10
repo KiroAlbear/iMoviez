@@ -31,6 +31,8 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
 import androidx.annotation.Nullable;
+
+import com.example.android.popularmovies.databinding.ActivityMainBinding;
 import com.google.android.material.snackbar.Snackbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
@@ -48,7 +50,6 @@ import com.example.android.popularmovies.ui.detail.DetailActivity;
 import com.example.android.popularmovies.settings.SettingsActivity;
 import com.example.android.popularmovies.data.MovieEntry;
 import com.example.android.popularmovies.data.MoviePreferences;
-import com.example.android.popularmovies.databinding.ActivityMainBinding;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.utilities.InjectorUtils;

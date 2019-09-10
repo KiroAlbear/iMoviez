@@ -33,7 +33,7 @@ import static com.example.android.popularmovies.utilities.Constant.DATABASE_NAME
  */
 
 // List of the entry classes and associated TypeConverters
-@Database(entities = {MovieEntry.class}, version = 1, exportSchema = false)
+@Database(entities = {MovieEntry.class}, version = 2, exportSchema = false)
 @TypeConverters(DateConverter.class)
 public abstract class MovieDatabase extends RoomDatabase {
 

@@ -1,5 +1,6 @@
 package com.example.android.popularmovies.viewModels
 
+import android.util.Log
 import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel
 import com.example.android.popularmovies.utilities.Constant
 import com.google.firebase.auth.FirebaseAuth
@@ -20,7 +21,7 @@ class FireBaseViewModel {
         db.collection(Constant.MOVIE_COLLECTION_KEY).document(movieName).set(fireBaseUser)
                 .addOnSuccessListener { documentReference ->
 
-                    //  Log.d("adding currentUser", documentReference.toString())
+                     print("adding currentUser")
 
                 }.addOnFailureListener { ex ->
 

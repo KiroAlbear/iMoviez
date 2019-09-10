@@ -7,11 +7,11 @@ android {
     def PopularMoviesApp_ApiKey = '"7197233d96737b222cf716d4e2652324"'
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.example.android.popularmovies"
+        applicationId "com.example.moviez"
         minSdkVersion 16
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -30,6 +30,8 @@ android {
 }
 
 dependencies {
+
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
@@ -45,8 +47,10 @@ dependencies {
     implementation 'androidx.preference:preference:1.0.0'
 
     // Room
+    kapt "android.arch.persistence.room:compiler:1.1.1"
     implementation 'androidx.room:room-runtime:2.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.0.0'
+    annotationProcessor "android.arch.persistence.room:compiler:1.0.0"
 
     // ViewModel and LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
