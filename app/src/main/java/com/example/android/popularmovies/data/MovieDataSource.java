@@ -97,7 +97,7 @@ public class MovieDataSource extends PageKeyedDataSource<Integer, Movie> {
 
                    List<Movie> res = response.body().getMovieResults();
                    for (int i=0; i<res.size(); i++){
-                        if(res.get(i).getPosterPath() == null||res.get(i).getBackdropPath() == null)
+                        if(res.get(i).getPosterPath() == null||res.get(i).getBackdropPath() == null||res.get(i) == null)
                             res.remove(i);
                    }
                     callback.onResult(res,PREVIOUS_PAGE_KEY_ONE, NEXT_PAGE_KEY_TWO);

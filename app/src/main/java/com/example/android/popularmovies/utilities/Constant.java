@@ -17,6 +17,7 @@
 package com.example.android.popularmovies.utilities;
 
 import com.example.android.popularmovies.BuildConfig;
+import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel;
 
 public final class Constant {
 
@@ -155,6 +156,8 @@ public final class Constant {
     public static  String SEARCH_KEYWORD = "";
     public static final String MOVIE_LINK_KEY_FIREBASE = "link";
     public static final String MOVIE_SUB_KEY_FIREBASE = "sub";
+    public static final String MOVIE_NAME_KEY_FIREBASE = "name";
+    public static final String MOVIE_YEAR_KEY_FIREBASE = "year";
     public static final String MOVIE_COLLECTION_KEY = "movies";
 
 }

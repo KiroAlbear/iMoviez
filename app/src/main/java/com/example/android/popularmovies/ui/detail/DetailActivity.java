@@ -27,6 +27,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
+
+import com.example.android.popularmovies.Navigators.FireBaseNavigator;
+import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel;
+import com.example.android.popularmovies.viewModels.FireBaseViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -79,7 +83,7 @@ import static com.example.android.popularmovies.utilities.Constant.YOUTUBE_BASE_
  */
 public class DetailActivity extends AppCompatActivity implements
         InformationFragment.OnInfoSelectedListener, TrailerFragment.OnTrailerSelectedListener,
-        InformationFragment.OnViewAllSelectedListener {
+        InformationFragment.OnViewAllSelectedListener, FireBaseNavigator {
 
     /** Tag for logging */
     public static final String TAG = DetailActivity.class.getSimpleName();
@@ -105,10 +109,13 @@ public class DetailActivity extends AppCompatActivity implements
     /** The first trailer's YouTube URL */
     private String mFirstVideoUrl;
 
+    FireBaseViewModel vm ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
+
 
         // Get the movie data from the MainActivity. The movie data includes the movie id, original title,
         // title, poster path, overview, vote average, release date, and backdrop path.
@@ -139,6 +146,11 @@ public class DetailActivity extends AppCompatActivity implements
             mDetailBinding.tvReleaseYear.setText(resultReleaseYear);
             mDetailBinding.tvGenre.setText(resultGenre);
         }
+
+        vm = new FireBaseViewModel(this);
+        String[] movieDate = mMovie.getReleaseDate().split("-");
+        // vm.addMovie(movie.getTitle().toLowerCase(),new FirebaseMovieModel("",""));
+        vm.getMovieByName(mDetailBinding.tvDetailTitle.getText().toString().toLowerCase(),movieDate[0]);
     }
 
     /**
@@ -562,5 +574,22 @@ public class DetailActivity extends AppCompatActivity implements
         } else {
             mDetailBinding.pbDetailLoadingIndicator.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onMovieFounded(@org.jetbrains.annotations.Nullable FirebaseMovieModel movie) {
+        mDetailBinding.ivPlayCircle.setBackgroundDrawable(getDrawable(R.drawable.ic_movie_play ));
+        mDetailBinding.ivPlayCircle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onNotFound() {
+
     }
 }

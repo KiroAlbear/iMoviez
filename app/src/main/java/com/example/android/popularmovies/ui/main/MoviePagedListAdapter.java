@@ -25,12 +25,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.popularmovies.Navigators.FireBaseNavigator;
 import com.example.android.popularmovies.R;
 import com.example.android.popularmovies.databinding.MovieListItemBinding;
 import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel;
 import com.example.android.popularmovies.model.Movie;
+import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.viewModels.FireBaseViewModel;
 import com.squareup.picasso.Picasso;
+
+import org.jetbrains.annotations.Nullable;
 
 import static com.example.android.popularmovies.utilities.Constant.IMAGE_BASE_URL;
 import static com.example.android.popularmovies.utilities.Constant.IMAGE_FILE_SIZE;
@@ -40,12 +44,14 @@ import static com.example.android.popularmovies.utilities.Constant.IMAGE_FILE_SI
  * The PagedListAdapter is notified when pages are loaded, and it uses DiffUtil to compute fine grain
  * updates as new data is received.
  */
-public class MoviePagedListAdapter extends PagedListAdapter<Movie, MoviePagedListAdapter.MoviePagedViewHolder> {
+public class MoviePagedListAdapter extends PagedListAdapter<Movie, MoviePagedListAdapter.MoviePagedViewHolder>  {
 
     /** An on-click handler that we've defined to make it easy for an Activity to interface with
      * our RecyclerView
      */
     private final MoviePagedListAdapter.MoviePagedListAdapterOnClickHandler mOnClickHandler;
+
+
 
     /**
      * The interface that receives onClick messages.
@@ -163,8 +169,7 @@ public class MoviePagedListAdapter extends PagedListAdapter<Movie, MoviePagedLis
             Movie movie = getItem(adapterPosition);
             mOnClickHandler.onItemClick(movie);
 
-            FireBaseViewModel vm = new FireBaseViewModel();
-            vm.addMovie(movie.getTitle(),new FirebaseMovieModel("",""));
         }
+
     }
 }

@@ -22,6 +22,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.example.android.popularmovies.Navigators.FireBaseNavigator;
+import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel;
 import com.example.android.popularmovies.ui.cast.CastFragment;
 import com.example.android.popularmovies.ui.info.InformationFragment;
 import com.example.android.popularmovies.ui.review.ReviewFragment;
@@ -36,7 +38,7 @@ import static com.example.android.popularmovies.utilities.Constant.TRAILERS;
 /**
  * The DetailPagerAdapter provides the appropriate {@link Fragment} for a view pager.
  */
-public class DetailPagerAdapter extends FragmentPagerAdapter {
+public class DetailPagerAdapter extends FragmentPagerAdapter  {
 
     /** Context of the app */
     private Context mContext;
@@ -89,4 +91,5 @@ public class DetailPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return Constant.TAP_TITLE[position % Constant.PAGE_COUNT].toUpperCase();
     }
+
 }
