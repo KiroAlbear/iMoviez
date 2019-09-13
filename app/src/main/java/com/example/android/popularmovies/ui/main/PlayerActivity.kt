@@ -8,6 +8,10 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.util.Log
 import android.util.TypedValue
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import android.widget.LinearLayout
 import androidx.databinding.DataBindingUtil
 import com.example.android.popularmovies.R
 import com.example.android.popularmovies.databinding.ActivityPlayerBinding
@@ -61,7 +65,8 @@ class PlayerActivity : AppCompatActivity() {
             })
 
         }).start()
-
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
     }
 
@@ -120,6 +125,14 @@ class PlayerActivity : AppCompatActivity() {
         )
 
         binding.videoPlayer.getSubtitleView().setFixedTextSize(TypedValue.COMPLEX_UNIT_PX, 100f);
+
+//        var params = LinearLayout.LayoutParams
+//        binding.videoPlayer.getLayoutParams();
+//        params.width=params.MATCH_PARENT;
+//        params.height=params.MATCH_PARENT;
+//        binding.videoPlayer.setLayoutParams(params);
+
+
     }
 
     fun getMovieUrl(downloadURL: String): String {
