@@ -159,5 +159,11 @@ public final class Constant {
     public static final String MOVIE_NAME_KEY_FIREBASE = "name";
     public static final String MOVIE_YEAR_KEY_FIREBASE = "year";
     public static final String MOVIE_COLLECTION_KEY = "movies";
+//    public static final String INTENT_PAGE_URL_KEY = "PageURL";
+//    public static final String INTENT_SUBTITLE_URL_KEY = "SubtitleURL";
+//    public static final String INTENT_MOVIE_NAME_KEY = "MovieName";
+//    public static final String INTENT_MOVIE_YEAR_KEY = "MovieName";
+    public static final String INTENT_MOVIE_KEY = "MovieName";
+
 
 }

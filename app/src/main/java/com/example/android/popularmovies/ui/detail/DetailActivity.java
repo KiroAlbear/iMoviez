@@ -18,25 +18,33 @@ package com.example.android.popularmovies.ui.detail;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
 import android.content.Context;
 import android.content.Intent;
+
 import androidx.databinding.DataBindingUtil;
+
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 
 import com.example.android.popularmovies.Navigators.FireBaseNavigator;
 import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel;
+import com.example.android.popularmovies.ui.main.PlayerActivity;
+import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.viewModels.FireBaseViewModel;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.core.app.ShareCompat;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -85,31 +93,47 @@ public class DetailActivity extends AppCompatActivity implements
         InformationFragment.OnInfoSelectedListener, TrailerFragment.OnTrailerSelectedListener,
         InformationFragment.OnViewAllSelectedListener, FireBaseNavigator {
 
-    /** Tag for logging */
+    /**
+     * Tag for logging
+     */
     public static final String TAG = DetailActivity.class.getSimpleName();
 
-    /** ViewModel for Favorites */
+    /**
+     * ViewModel for Favorites
+     */
     private FavViewModel mFavViewModel;
 
-    /** True when the movie is in favorites collection, otherwise false */
+    /**
+     * True when the movie is in favorites collection, otherwise false
+     */
     private boolean mIsInFavorites;
 
-    /** Member variable for the MovieDatabase*/
+    /**
+     * Member variable for the MovieDatabase
+     */
     private MovieDatabase mDb;
 
-    /** Member variable for the MovieEntry */
+    /**
+     * Member variable for the MovieEntry
+     */
     private MovieEntry mMovieEntry;
 
-    /** Movie object */
+    /**
+     * Movie object
+     */
     private Movie mMovie;
 
-    /** This field is used for data binding */
+    /**
+     * This field is used for data binding
+     */
     private ActivityDetailBinding mDetailBinding;
 
-    /** The first trailer's YouTube URL */
+    /**
+     * The first trailer's YouTube URL
+     */
     private String mFirstVideoUrl;
 
-    FireBaseViewModel vm ;
+    FireBaseViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,11 +174,11 @@ public class DetailActivity extends AppCompatActivity implements
         vm = new FireBaseViewModel(this);
         String[] movieDate = mMovie.getReleaseDate().split("-");
         // vm.addMovie(movie.getTitle().toLowerCase(),new FirebaseMovieModel("",""));
-        vm.getMovieByName(mDetailBinding.tvDetailTitle.getText().toString().toLowerCase(),movieDate[0]);
+        vm.getMovieByName(mDetailBinding.tvDetailTitle.getText().toString().toLowerCase(), movieDate[0]);
     }
 
     /**
-     *  This method is called from onCreate to setup the UI
+     * This method is called from onCreate to setup the UI
      */
     private void setupUI() {
         // Show the up button in Collapsing Toolbar
@@ -286,7 +310,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     /**
      * Show a snackbar message when a movie added to MovieDatabase
-     *
+     * <p>
      * Reference: @see "https://stackoverflow.com/questions/34020891/how-to-change-background-color-of-the-snackbar"
      */
     private void showSnackbarAdded() {
@@ -405,7 +429,7 @@ public class DetailActivity extends AppCompatActivity implements
 
     /**
      * Show the title in the app bar when a CollapsingToolbarLayout is fully collapsed, otherwise hide the title.
-     *
+     * <p>
      * Reference: @see "https://stackoverflow.com/questions/31662416/show-collapsingtoolbarlayout-title-only-when-collapsed"
      */
     private void setCollapsingToolbarTitle() {
@@ -434,8 +458,9 @@ public class DetailActivity extends AppCompatActivity implements
 
     /**
      * Define the behavior for onInformationSelected
+     *
      * @param movieDetails The movie details contains information, such as budget, genre, runtime,
-     *                    revenue, status, vote count, credits.
+     *                     revenue, status, vote count, credits.
      */
     @Override
     public void onInformationSelected(MovieDetails movieDetails) {
@@ -578,10 +603,19 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onMovieFounded(@org.jetbrains.annotations.Nullable FirebaseMovieModel movie) {
-        mDetailBinding.ivPlayCircle.setBackgroundDrawable(getDrawable(R.drawable.ic_movie_play ));
+        mDetailBinding.ivPlayCircle.setBackgroundDrawable(getDrawable(R.drawable.ic_movie_play));
         mDetailBinding.ivPlayCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Intent in = new Intent(view.getContext(), PlayerActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable(Constant.INTENT_MOVIE_KEY, movie);
+                in.putExtras(bundle);
+
+//                in.putExtra(Constant.INTENT_PAGE_URL_KEY,movie.getLink());
+//                in.putExtra(Constant.INTENT_SUBTITLE_URL_KEY,movie.getSub());
+//                in.putExtra(Constant.INTENT_SUBTITLE_URL_KEY,movie.getSub());
+                startActivity(in);
 
             }
         });
