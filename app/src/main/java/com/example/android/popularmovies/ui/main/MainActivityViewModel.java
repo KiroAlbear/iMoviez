@@ -59,7 +59,7 @@ public class MainActivityViewModel extends ViewModel {
     /**
      * Initialize the paged list
      */
-    private void init(String sortCriteria) {
+    public void init(String sortCriteria) {
         Executor executor = Executors.newFixedThreadPool(NUMBER_OF_FIXED_THREADS_FIVE);
 
         // Create a MovieDataSourceFactory providing DataSource generations

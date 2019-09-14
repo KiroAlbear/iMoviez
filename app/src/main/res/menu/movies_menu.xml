@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <group android:checkableBehavior="single">
+        <item
+
+            android:id="@+id/popularOption"
+            android:title="@string/pref_sort_by_label_popular" />
+        <item
+
+            android:id="@+id/nowPlayingOption"
+            android:title="@string/pref_sort_by_label_now_playing" />
+        <item
+
+            android:id="@+id/topRatedOption"
+            android:title="@string/pref_sort_by_label_top_rated" />
+        <item
+
+            android:id="@+id/favouriteOption"
+            android:title="@string/pref_sort_by_label_favorites" />
+
+    </group>
+</menu>

@@ -16,29 +16,40 @@
 
 package com.example.android.popularmovies.ui.main;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.paging.PagedList;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import androidx.databinding.DataBindingUtil;
+
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+
 import androidx.annotation.Nullable;
 
 import com.example.android.popularmovies.databinding.ActivityMainBinding;
+import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 import androidx.recyclerview.widget.GridLayoutManager;
+
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -71,7 +82,7 @@ import static com.example.android.popularmovies.utilities.Constant.REQUEST_CODE_
 public class MainActivity extends AppCompatActivity implements
         FavoriteAdapter.FavoriteAdapterOnClickHandler,
         SharedPreferences.OnSharedPreferenceChangeListener,
-        MoviePagedListAdapter.MoviePagedListAdapterOnClickHandler {
+        MoviePagedListAdapter.MoviePagedListAdapterOnClickHandler, NavigationView.OnNavigationItemSelectedListener , MaterialSearchBar.OnSearchActionListener {
 
     /**
      * Tag for a log message
@@ -109,8 +120,6 @@ public class MainActivity extends AppCompatActivity implements
     private ActivityMainBinding mMainBinding;
 
 
-    private MaterialSearchBar searchBar;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,27 +133,28 @@ public class MainActivity extends AppCompatActivity implements
             // Show a dialog when there is no internet connection
             showNetworkDialog(isOnline());
         }
-              searchBar = findViewById(R.id.searchBar);
-        searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
-            @Override
-            public void onSearchStateChanged(boolean enabled) {
+        mMainBinding.searchBar.setOnSearchActionListener(this);
+//        mMainBinding.searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
+//            @Override
+//            public void onSearchStateChanged(boolean enabled) {
+//
+//            }
+//
+//            @Override
+//            public void onSearchConfirmed(CharSequence text) {
+//
+//            }
+//
+//            @Override
+//            public void onButtonClicked(int buttonCode) {
+//
+//            }
+//        });
 
-            }
 
-            @Override
-            public void onSearchConfirmed(CharSequence text) {
-                Constant.SEARCH_KEYWORD = text.toString();
-                mMainViewModel.initSearch();
-                updateUI("search");
-            }
-
-            @Override
-            public void onButtonClicked(int buttonCode) {
-
-            }
-        });
-                // Get the sort criteria currently set in Preferences
-                mSortCriteria = MoviePreferences.getPreferredSortCriteria(this);
+        mMainBinding.navView.setNavigationItemSelectedListener(this);
+        // Get the sort criteria currently set in Preferences
+        mSortCriteria = MoviePreferences.getPreferredSortCriteria(this);
 
         // Get the ViewModel from the factory
         setupViewModel(mSortCriteria);
@@ -168,6 +178,65 @@ public class MainActivity extends AppCompatActivity implements
             mSavedLayoutState = savedInstanceState.getParcelable(LAYOUT_MANAGER_STATE);
             // Restore the scroll position
             mMainBinding.rvMovie.getLayoutManager().onRestoreInstanceState(mSavedLayoutState);
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.popularOption:
+                mMainViewModel.init(getString(R.string.pref_sort_by_popular));
+                updateUI(getString(R.string.pref_sort_by_popular));
+                break;
+            case R.id.nowPlayingOption:
+                mMainViewModel.init(getString(R.string.pref_sort_by_now_playing));
+                updateUI(getString(R.string.pref_sort_by_now_playing));
+                break;
+            case R.id.topRatedOption:
+                mMainViewModel.init(getString(R.string.pref_sort_by_top_rated));
+                updateUI(getString(R.string.pref_sort_by_top_rated));
+                break;
+
+            case R.id.favouriteOption:
+                mMainViewModel.init(getString(R.string.pref_sort_by_favorites));
+                updateUI(getString(R.string.pref_sort_by_favorites));
+                break;
+
+        }
+        mMainBinding.drawerLayout.closeDrawer(GravityCompat.START);
+
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mMainBinding.drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mMainBinding.drawerLayout.closeDrawer(GravityCompat.START);
+        } else
+            super.onBackPressed();
+    }
+
+
+    @Override
+    public void onSearchStateChanged(boolean enabled) {
+
+    }
+
+    @Override
+    public void onSearchConfirmed(CharSequence text) {
+        Constant.SEARCH_KEYWORD = text.toString();
+        mMainViewModel.initSearch();
+        updateUI("search");
+    }
+    @Override
+    public void onButtonClicked(int buttonCode) {
+        switch (buttonCode){
+            case MaterialSearchBar.BUTTON_NAVIGATION:
+                mMainBinding.drawerLayout.openDrawer(GravityCompat.START);
+                break;
+            case MaterialSearchBar.BUTTON_BACK:
+                mMainBinding.searchBar.disableSearch();
+                break;
         }
     }
 
@@ -514,4 +583,6 @@ public class MainActivity extends AppCompatActivity implements
     private void hideRefresh() {
         mMainBinding.swipeRefresh.setRefreshing(false);
     }
+
+
 }
