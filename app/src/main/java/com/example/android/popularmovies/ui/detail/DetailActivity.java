@@ -28,6 +28,7 @@ import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -133,6 +134,8 @@ public class DetailActivity extends AppCompatActivity implements
      */
     private String mFirstVideoUrl;
 
+    private boolean foundMovieFlag = false;
+
     FireBaseViewModel vm;
 
     @Override
@@ -174,7 +177,7 @@ public class DetailActivity extends AppCompatActivity implements
         vm = new FireBaseViewModel(this);
         String[] movieDate = mMovie.getReleaseDate().split("-");
         // vm.addMovie(movie.getTitle().toLowerCase(),new FirebaseMovieModel("",""));
-        vm.getMovieByName(mDetailBinding.tvDetailTitle.getText().toString().toLowerCase(), movieDate[0]);
+        vm.getMovieByName(mDetailBinding.tvDetailTitle.getText().toString().toLowerCase(), movieDate[0], mDetailBinding.tvReleaseYear.getText().toString());
     }
 
     /**
@@ -345,7 +348,8 @@ public class DetailActivity extends AppCompatActivity implements
      */
     @Override
     public void onTrailerSelected(final Video video) {
-        // Display play circle image button
+        // Display play circle image button if movie did not found in firebase
+        if(!foundMovieFlag)
         mDetailBinding.ivPlayCircle.setVisibility(View.VISIBLE);
 
         // Get the key of the first video
@@ -603,8 +607,13 @@ public class DetailActivity extends AppCompatActivity implements
 
     @Override
     public void onMovieFounded(@org.jetbrains.annotations.Nullable FirebaseMovieModel movie) {
-        mDetailBinding.ivPlayCircle.setBackgroundDrawable(getDrawable(R.drawable.ic_movie_play));
-        mDetailBinding.ivPlayCircle.setOnClickListener(new View.OnClickListener() {
+        // if( mDetailBinding.ivPlayCircle.getVisibility() == View.VISIBLE)
+        foundMovieFlag = true;
+        mDetailBinding.ivPlayCircle.setVisibility(View.GONE);
+
+        mDetailBinding.ivMovieCircle.setVisibility(View.VISIBLE);
+        //mDetailBinding.ivPlayCircle.setBackgroundDrawable(getDrawable(R.drawable.ic_movie_play));
+        mDetailBinding.ivMovieCircle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent in = new Intent(view.getContext(), PlayerActivity.class);

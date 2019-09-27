@@ -18,13 +18,16 @@ package com.example.android.popularmovies.data;
 
 import androidx.paging.PageKeyedDataSource;
 import androidx.annotation.NonNull;
+
 import android.util.Log;
 
+import com.example.android.popularmovies.model.FireBaseModel.FirebaseMovieModel;
 import com.example.android.popularmovies.model.Movie;
 import com.example.android.popularmovies.model.MovieResponse;
 import com.example.android.popularmovies.utilities.Constant;
 import com.example.android.popularmovies.utilities.Controller;
 import com.example.android.popularmovies.utilities.TheMovieApi;
+import com.example.android.popularmovies.viewModels.FireBaseViewModel;
 
 import java.util.List;
 
@@ -40,21 +43,29 @@ import static com.example.android.popularmovies.utilities.Constant.RESPONSE_CODE
  * The MovieDataSource is the base class for loading snapshots of movie data into a given PagedList,
  * which is backed by the network. Since the TMDb API includes a key with each page load, extend
  * from PageKeyedDataSource.
- *
+ * <p>
  * Reference: @see "https://proandroiddev.com/8-steps-to-implement-paging-library-in-android-d02500f7fffe"
  * "https://www.youtube.com/watch?v=Ts-uxYiBEQ8" "https://www.youtube.com/watch?v=QVMqCRs0BNA"
  * "https://codelabs.developers.google.com/codelabs/android-paging/index.html#2"
  */
 public class MovieDataSource extends PageKeyedDataSource<Integer, Movie> {
 
-    /** Tag for logging */
+    /**
+     * Tag for logging
+     */
     private static final String TAG = MovieDataSource.class.getSimpleName();
 
-    /** Member variable for TheMovieApi interface */
+    /**
+     * Member variable for TheMovieApi interface
+     */
     private TheMovieApi mTheMovieApi;
 
-    /** String for the sort order of the movies */
+    /**
+     * String for the sort order of the movies
+     */
     private String mSortCriteria;
+
+    private FireBaseViewModel firebaseVM = new FireBaseViewModel(null);
 
     public MovieDataSource(String sortCriteria) {
         mTheMovieApi = Controller.getClient().create(TheMovieApi.class);
@@ -67,13 +78,15 @@ public class MovieDataSource extends PageKeyedDataSource<Integer, Movie> {
     @Override
     public void loadInitial(@NonNull LoadInitialParams<Integer> params,
                             @NonNull final LoadInitialCallback<Integer, Movie> callback) {
-        if(!mSortCriteria.equals("search")) {
+        if (!mSortCriteria.equals("search")) {
             mTheMovieApi.getMovies(mSortCriteria, Constant.API_KEY, Constant.LANGUAGE, Constant.PAGE_ONE)
                     .enqueue(new Callback<MovieResponse>() {
                         @Override
                         public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                             if (response.isSuccessful()) {
-                                callback.onResult(response.body().getMovieResults(),
+                                List<Movie> res = response.body().getMovieResults();
+                                res = removeOutlires(res);
+                                callback.onResult(res,
                                         PREVIOUS_PAGE_KEY_ONE, NEXT_PAGE_KEY_TWO);
 
                             } else if (response.code() == RESPONSE_CODE_API_STATUS) {
@@ -88,19 +101,14 @@ public class MovieDataSource extends PageKeyedDataSource<Integer, Movie> {
                             Log.e(TAG, "Failed initializing a PageList: " + t.getMessage());
                         }
                     });
-        }
-        else
-        {
-            mTheMovieApi.searchMovie(Constant.API_KEY,Constant.LANGUAGE,1,Constant.SEARCH_KEYWORD).enqueue(new Callback<MovieResponse>() {
+        } else {
+            mTheMovieApi.searchMovie(Constant.API_KEY, Constant.LANGUAGE, 1, Constant.SEARCH_KEYWORD).enqueue(new Callback<MovieResponse>() {
                 @Override
                 public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
 
-                   List<Movie> res = response.body().getMovieResults();
-                   for (int i=0; i<res.size(); i++){
-                        if(res.get(i).getPosterPath() == null||res.get(i).getBackdropPath() == null||res.get(i) == null)
-                            res.remove(i);
-                   }
-                    callback.onResult(res,PREVIOUS_PAGE_KEY_ONE, NEXT_PAGE_KEY_TWO);
+                    List<Movie> res = response.body().getMovieResults();
+                    res=removeOutlires(res);
+                    callback.onResult(res, PREVIOUS_PAGE_KEY_ONE, NEXT_PAGE_KEY_TWO);
                 }
 
                 @Override
@@ -109,6 +117,27 @@ public class MovieDataSource extends PageKeyedDataSource<Integer, Movie> {
                 }
             });
         }
+    }
+
+    private List<Movie> removeOutlires(List<Movie> movieList) {
+        //int listSize = movieList.size();
+        for (int i = 0; i < movieList.size(); i++) {
+            if (movieList.get(i).getPosterPath() == null || movieList.get(i).getBackdropPath() == null || movieList.get(i) == null)
+            {
+                movieList.remove(i);
+                /// do not move forward
+                if(i!=0)
+                    i--;
+            }
+            else if(Integer.parseInt(getMovieYear(movieList.get(i).getReleaseDate())) >= 2000 && movieList.get(i).getVoteAverage()>=5)
+                firebaseVM.getMovieByName(movieList.get(i).getTitle(),movieList.get(i).getReleaseDate(),Double.toString(movieList.get(i).getVoteAverage()));
+        }
+        return movieList;
+    }
+    private String getMovieYear(String releaseDate)
+    {
+        String[] temp = releaseDate.split("-");
+        return temp[0];
     }
 
     /**
@@ -135,6 +164,8 @@ public class MovieDataSource extends PageKeyedDataSource<Integer, Movie> {
                     public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                         if (response.isSuccessful()) {
                             int nextKey = currentPage + 1;
+                            List<Movie> res = response.body().getMovieResults();
+                            removeOutlires(res);
                             callback.onResult(response.body().getMovieResults(), nextKey);
                         }
                     }

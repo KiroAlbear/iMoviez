@@ -1,17 +1,18 @@
 package com.example.android.popularmovies.ui.main
 
+import android.content.Context
 import android.graphics.Color
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
-import android.provider.DocumentsContract
-import android.util.Log
+import android.util.DisplayMetrics
 import android.util.TypedValue
-import android.view.View
-import android.view.Window
+import android.view.Display
 import android.view.WindowManager
-import android.widget.LinearLayout
+import android.widget.FrameLayout
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.app.NotificationCompatSideChannelService
 import androidx.databinding.DataBindingUtil
 import com.example.android.popularmovies.R
 import com.example.android.popularmovies.databinding.ActivityPlayerBinding
@@ -28,17 +29,10 @@ import com.google.android.exoplayer2.text.CaptionStyleCompat
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
 import java.io.BufferedReader
 import java.io.File
-import java.io.InputStream
 import java.io.InputStreamReader
-import java.net.URI
 import java.net.URL
-import java.net.URLConnection
-import java.util.*
-import kotlin.concurrent.thread
 
 class PlayerActivity : AppCompatActivity() {
 
@@ -68,6 +62,16 @@ class PlayerActivity : AppCompatActivity() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+//        var wm: WindowManager = this.getSystemService(Context.WINDOW_SERVICE) as (WindowManager)
+//        var display: Display = wm.getDefaultDisplay()
+//        var metrics: DisplayMetrics = DisplayMetrics()
+//        display.getMetrics(metrics)
+//
+//        var params: ConstraintLayout.LayoutParams = binding.videoPlayer.getLayoutParams() as ConstraintLayout.LayoutParams
+//        params.width = metrics.widthPixels
+//        params.height = metrics.heightPixels
+//        binding.videoPlayer.setLayoutParams(params)
+
     }
 
     override fun onPause() {
@@ -76,7 +80,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun initExoPlayer() {
-
+        var mergedSource:MergingMediaSource
         downloadPath = Environment.getExternalStorageDirectory()
         val player = ExoPlayerFactory.newSimpleInstance(this)
         binding.videoPlayer.player = player
@@ -104,8 +108,12 @@ class PlayerActivity : AppCompatActivity() {
                 C.TIME_UNSET
         )
 
+        if (subtitleURL == "")
+            mergedSource = MergingMediaSource(videoSource)
+        else
+            mergedSource = MergingMediaSource(videoSource, subtitleSource)
 
-        val mergedSource = MergingMediaSource(videoSource, subtitleSource)
+
 
         player.prepare(mergedSource)
         player.setPlayWhenReady(true)
@@ -139,33 +147,35 @@ class PlayerActivity : AppCompatActivity() {
         var ghr: BufferedReader? = null
         var foundUrl = ""
         var sgh = StringBuilder()
-        try {
+        if (downloadURL != "") {
+            try {
 
-            var url = URL(downloadURL)
-            ghr = BufferedReader(InputStreamReader(url.openStream()))
+                var url = URL(downloadURL)
+                ghr = BufferedReader(InputStreamReader(url.openStream()))
 
-            var line: String? = ""
+                var tempLine: String? = ""
+                var originalLine: String? = ""
 
 
-            while (line != null) {
-                line = ghr.readLine().toLowerCase()
+                while (tempLine != null) {
+                    originalLine = ghr.readLine()
+                    tempLine = originalLine.toLowerCase().replace('.', ' ').replace('+', ' ')
+                    if (tempLine.contains(movie.name) && tempLine.contains("href") && !tempLine.contains("file")) {
+                        foundUrl = originalLine
+                        foundUrl = foundUrl.substringAfter('"')
+                        foundUrl = foundUrl.substringBefore('"')
+                        break
+                    }
+                }
 
-                if (line.contains(movie.name) && line.contains("href") && !line.contains("file")) {
-                    foundUrl = line
-                    foundUrl = foundUrl.substringAfter('"')
-                    foundUrl = foundUrl.substringBefore('"')
-                    break
+                System.out.println(sgh);
+            } finally {
+
+                if (ghr != null) {
+                    ghr.close();
                 }
             }
-
-            System.out.println(sgh);
-        } finally {
-
-            if (ghr != null) {
-                ghr.close();
-            }
         }
-
 
         return foundUrl
     }
