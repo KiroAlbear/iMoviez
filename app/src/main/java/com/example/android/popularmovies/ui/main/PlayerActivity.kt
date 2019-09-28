@@ -3,6 +3,7 @@ package com.example.android.popularmovies.ui.main
 import android.content.Context
 import android.graphics.Color
 import android.net.Uri
+import android.opengl.Visibility
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Environment
@@ -21,6 +22,7 @@ import com.example.android.popularmovies.utilities.Constant
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayerFactory
 import com.google.android.exoplayer2.Format
+import com.google.android.exoplayer2.Player
 import com.google.android.exoplayer2.source.MediaSource
 import com.google.android.exoplayer2.source.MergingMediaSource
 import com.google.android.exoplayer2.source.ProgressiveMediaSource
@@ -29,6 +31,7 @@ import com.google.android.exoplayer2.text.CaptionStyleCompat
 import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.util.MimeTypes
 import com.google.android.exoplayer2.util.Util
+import com.google.firebase.database.core.view.View
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -59,18 +62,13 @@ class PlayerActivity : AppCompatActivity() {
             })
 
         }).start()
+
+        // full screen flag
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-//        var wm: WindowManager = this.getSystemService(Context.WINDOW_SERVICE) as (WindowManager)
-//        var display: Display = wm.getDefaultDisplay()
-//        var metrics: DisplayMetrics = DisplayMetrics()
-//        display.getMetrics(metrics)
-//
-//        var params: ConstraintLayout.LayoutParams = binding.videoPlayer.getLayoutParams() as ConstraintLayout.LayoutParams
-//        params.width = metrics.widthPixels
-//        params.height = metrics.heightPixels
-//        binding.videoPlayer.setLayoutParams(params)
+        // screen alwayes on flag
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
     }
 
@@ -80,7 +78,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     fun initExoPlayer() {
-        var mergedSource:MergingMediaSource
+        var mergedSource: MergingMediaSource
         downloadPath = Environment.getExternalStorageDirectory()
         val player = ExoPlayerFactory.newSimpleInstance(this)
         binding.videoPlayer.player = player
@@ -119,11 +117,11 @@ class PlayerActivity : AppCompatActivity() {
         player.setPlayWhenReady(true)
 
 
-        binding.videoPlayer.getSubtitleView().setApplyEmbeddedStyles(false);
-        binding.videoPlayer.getSubtitleView().setApplyEmbeddedFontSizes(false);
+        binding.videoPlayer.getSubtitleView().setApplyEmbeddedStyles(false)
+        binding.videoPlayer.getSubtitleView().setApplyEmbeddedFontSizes(false)
         binding.videoPlayer.getSubtitleView().setStyle(
                 CaptionStyleCompat(
-                        Color.RED,
+                        Color.WHITE,
                         Color.TRANSPARENT,
                         Color.TRANSPARENT,
                         CaptionStyleCompat.EDGE_TYPE_OUTLINE,
@@ -132,13 +130,16 @@ class PlayerActivity : AppCompatActivity() {
                 )
         )
 
-        binding.videoPlayer.getSubtitleView().setFixedTextSize(TypedValue.COMPLEX_UNIT_PX, 100f);
+        binding.videoPlayer.getSubtitleView().setFixedTextSize(TypedValue.COMPLEX_UNIT_PX, 85f);
 
-//        var params = LinearLayout.LayoutParams
-//        binding.videoPlayer.getLayoutParams();
-//        params.width=params.MATCH_PARENT;
-//        params.height=params.MATCH_PARENT;
-//        binding.videoPlayer.setLayoutParams(params);
+        binding.videoPlayer.player.addListener(object : Player.DefaultEventListener() {
+            override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
+                if (playWhenReady && playbackState == Player.STATE_READY) {
+                    binding.progressBar.visibility = android.view.View.INVISIBLE
+                }
+            }
+
+        })
 
 
     }
@@ -168,15 +169,16 @@ class PlayerActivity : AppCompatActivity() {
                     }
                 }
 
-                System.out.println(sgh);
+                System.out.println(sgh)
             } finally {
 
                 if (ghr != null) {
-                    ghr.close();
+                    ghr.close()
                 }
             }
         }
 
         return foundUrl
+
     }
 }
